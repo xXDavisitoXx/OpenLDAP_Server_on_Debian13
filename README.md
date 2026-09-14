@@ -508,7 +508,9 @@ http://LDAP-IP/lam
 ### 9.6 Click "Edit server profiles" to modify the OpenLDAP profile.
 * User: lam
 * pass: lam
-
+<p align="center">
+    <img src="Images/LAM/LAM-Edit-Profiles.png">
+</p>
 ### 9.7 Change default password LAM 
 On the first tab, "General Settings," scroll all the way down to the section
 labeled "Profile Password" and enter the new password twice.
