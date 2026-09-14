@@ -514,14 +514,18 @@ http://LDAP-IP/lam
 ### 9.7 Change default password LAM 
 On the first tab, "General Settings," scroll all the way down to the section
 labeled "Profile Password" and enter the new password twice.
-
+<p align="center">
+    <img src="Images/LAM/LAM-Profile-Password.png">
+</p>
 ⚠️ To give it a more corporate and professional setup, we will configure LAM to use a user from our LDAP tree,
 allowing it to be managed in the same way as the service accounts we will be using.
 
 In the "General Settings" tab, within the "Server Settings" section,
 we will edit the "Login method," "LDAP suffix," "Bind user," and "Bind password" fields.
 
-
+<p align="center">
+    <img src="LAM-Change-LAM-User.png">
+</p>
 
 On the Tool settings, input the domain name of your OpenLDAP server.
 On the Security settings, select the login method as Fixed list and input the details admin user for the OpenLDAP server.
@@ -532,10 +536,14 @@ On the Profile password, input the new password and repeat.
 ### 9.8 Edit users and groups directory
 
 Next, click on the Account Types section the configure the following section:
-
+<p align="center">
+    <img src="LAM-Account-types.png">
+</p>
 On the Users section, input the default base domain for OpenLDAP users. In his case, the default suffix is People.
 On the Groups section, input the default base domain for the group. In this case, the default other group is Groups.
 Click Save to apply the changes.
+
+
 
 ## 5 Configure LAM 
 
