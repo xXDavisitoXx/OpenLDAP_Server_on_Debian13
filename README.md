@@ -499,6 +499,9 @@ sudo systemctl restart apache2
 
 ### 9.4 Try web acces
 http://LDAP-IP/lam
+<p align="center">
+    <img src="Images/LAM/LAM-Cover.png" width="50%">
+</p>
 
 ### 9.5 Click the menu "LAM configuration" on the top right.
 
