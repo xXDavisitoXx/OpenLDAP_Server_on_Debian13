@@ -524,7 +524,7 @@ In the "General Settings" tab, within the "Server Settings" section,
 we will edit the "Login method," "LDAP suffix," "Bind user," and "Bind password" fields.
 
 <p align="center">
-    <img src="LAM-Change-LAM-User.png">
+    <img src="Images/LAM/LAM-Change-LAM-User.png">
 </p>
 
 On the Tool settings, input the domain name of your OpenLDAP server.
@@ -537,7 +537,7 @@ On the Profile password, input the new password and repeat.
 
 Next, click on the Account Types section the configure the following section:
 <p align="center">
-    <img src="LAM-Account-types.png">
+    <img src="Images/LAM/LAM-Account-types.png">
 </p>
 On the Users section, input the default base domain for OpenLDAP users. In his case, the default suffix is People.
 On the Groups section, input the default base domain for the group. In this case, the default other group is Groups.
