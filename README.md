@@ -471,7 +471,7 @@ sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ACL.ldif
 ### 9.1 Download and install Packet
 
 ```bash
-sudo apt install ldap-account-manager
+sudo apt install ldap-account-manager ldap-account-manager-lamdaemon
 ```
 
 ### 9.2 Update PHP memory limit to 256M
