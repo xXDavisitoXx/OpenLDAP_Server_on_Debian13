@@ -291,6 +291,17 @@ find extract -name "schema.olcSudo"
 ```conf
 # Users.ldif
 
+dn: uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: LDAP-Syncer
+cn: LDAP-Syncer
+sn: LDAP-Syncer
+userPassword: {SSHA}XyZ12345abcdef67890GhIjKlMnOpQrS
+description: Service account for multi-master replication between LDAP nodes
+
 dn: uid=lam-service,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
 objectClass: top
 objectClass: person
@@ -365,6 +376,13 @@ ldapadd -x -D "cn=admin,dc=computer,dc=academy,dc=com" -W -f Users.ldif
 
 ```conf
 # Groups.ldif
+
+dn: cn=LDAP-Replicators,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com
+objectClass: top
+objectClass: groupOfNames
+cn: LDAP-Replicators
+description: Authorized account group for LDAP synchronization
+member: uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
 
 dn: cn=LDAP-Administrators,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com
 objectClass: top
