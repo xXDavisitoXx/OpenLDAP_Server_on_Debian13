@@ -261,7 +261,7 @@ Check the base group is imported
 sudo ldapsearch -x -b "dc=computer,dc=academy,dc=com" ou
 ```
 
-### 4 Import sudoers or other schemas to LDAP
+## 4 Import sudoers or other schemas to LDAP
 El esquema sudo debe existir antes de importar cualquier LDIF que contenga objetos sudoRole, pero no depende de que hayas importado previamente base.ldif.
 
 ### 4.1 Download the Debian packet
@@ -287,7 +287,12 @@ ldapadd -Y EXTERNAL -H ldapi:/// -f extract/usr/share/doc/sudo-ldap/schema.olcSu
 find extract -name "schema.olcSudo"
 ```
 
-### 5.1 Create Users
+## 5 Create Users
+
+### 5.1 Create Users.ldif
+```bash
+nano Users.ldif 
+```
 ```conf
 # Users.ldif
 
@@ -367,13 +372,16 @@ userPassword: {SSHA}R7xTc2PnLmQ4VbY9KwEjF5ZdNsAuHcG3
 ```
 
 ### 5.2 Import Users 
-
 ```bash
 ldapadd -x -D "cn=admin,dc=computer,dc=academy,dc=com" -W -f Users.ldif
 ```
 
-### 6.1 Create Groups
+## 6 Create Groups
 
+### 6.1 Create Groups.ldif
+```bash
+nano Groups.ldif 
+```
 ```conf
 # Groups.ldif
 
@@ -420,13 +428,18 @@ cn: Wiki-Users
 gidNumber: 2003
 description: Group for user accounts that can access the Wiki
 ```
-### 6.2 Import Groups
 
+### 6.2 Import Groups
 ```bash
 ldapadd -x -D "cn=admin,dc=computer,dc=academy,dc=com" -W -f Groups.ldif
 ```
 
-### 7.1 Create Roles
+## 7 Create Roles
+
+### 7.1 Create Roles.ldif
+```bash
+nano Roles.ldif 
+```
 
 ```conf
 # Roles.ldif
@@ -455,14 +468,17 @@ sudoCommand: /usr/bin/sudoedit /etc/systemd/system/slapd*
 ```
 
 ### 7.2 Import Roles
-
 ```bash
 ldapadd -x -D "cn=admin,dc=computer,dc=academy,dc=com" -W -f Roles.ldif
 ```
 
+## 8 Create ACL lists
 
+### 8.1 Create ACL to LAM and LDAP replication
+```bash
+nano ACL.ldif 
+```
 
-### 8.1 Create ACL list to LDAP services
 No replication:
 ```conf
 # ACL.ldif
@@ -479,6 +495,7 @@ olcAccess: {2}to dn.subtree="dc=computer,dc=academy,dc=com"
   by users read
   by * none
 ```
+
 With replication
 ```conf
 # ACL.ldif
@@ -506,7 +523,9 @@ olcAccess: {3}to dn.subtree="dc=computer,dc=academy,dc=com"
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ACL.ldif
 ```
 
-### 8.3 Activate SincProv:
+## 9 Activate SincProv:
+
+### 9.1 create SincProv.ldif:
 ```bash
 nano syncprov.ldif
 ```
@@ -525,14 +544,18 @@ olcSpCheckpoint: 100 10
 olcSpSessionLog: 100
 ```
 
+### 9.2 Import SincProv
 ```bash
 sudo ldapadd -Y EXTERNAL -H ldapi:/// -f syncprov.ldif
 ```
 
-### 8.4 Create server ID:
+## 10 Create server ID:
+
+### 10.1 Create ServerID.ldif
 ```bash
-nano serverid.ldif 
+nano ServerID.ldif 
 ```
+
 LDAP-1:
 ```conf
 dn: cn=config
@@ -540,6 +563,7 @@ changetype: modify
 add: olcServerID
 olcServerID: 1 ldap://IP-LDAP-1
 ```
+
 LDAP-2:
 ```conf
 dn: cn=config
@@ -547,15 +571,20 @@ changetype: modify
 add: olcServerID
 olcServerID: 2 ldap://IP-LDAP-2
 ```
+
+### 10.2 Import
 Import:
 ```bash
-sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f serverid.ldif
+sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ServerID.ldif
 ```
 
-### 8.5 Configure SyncRepl
+## 11 Activate SyncRepl
+
+### 11.1 Create SyncRepl.ldif
 ```bash
 nano SyncRepl.ldif
 ```
+
 LDAP-1:
 ```conf
 # SyncRepl.ldif
@@ -573,6 +602,7 @@ olcSyncrepl: rid=001
  retry="5 5 300 +"
  timeout=1
 ```
+
 LDAP-2:
 ```conf
 # SyncRepl.ldif
@@ -590,20 +620,24 @@ olcSyncrepl: rid=002
  retry="5 5 300 +"
  timeout=1
 ```
-Import:
+
+### 11.2 Import:
 ```bash
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f SyncRepl.ldif
 ```
+### 11.3 Check:
 Check: 
 ```bash
 sudo ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b "olcDatabase={1}mdb,cn=config" olcSyncrepl
 ```
-### 8.5 Activate Mirror mode
+## 12 Activate Mirror mode
+
+### 12.1 Create Mirror.ldif
 ```bash
 nano Mirror.ldif
 ```
-```conf[Uploading Zabbix Official Repository.download…]()
 
+```conf
 # Mirror.ldif
 
 dn: olcDatabase={1}mdb,cn=config
@@ -612,7 +646,7 @@ add: olcMirrorMode
 olcMirrorMode: TRUE
 ```
 
-Import:
+### 12.2 Import:
 ```bash
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f Mirror.ldif
 ```
@@ -622,22 +656,22 @@ Check:
 sudo ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b "olcDatabase={1}mdb,cn=config" olcMirrorMode
 ```
 
-## 9 Install and configure LAM 
+## 13 Install and configure LAM 
 
-### 9.1 Download and install Packet
+### 13.1 Download and install Packet
 
 ```bash
 sudo apt install ldap-account-manager ldap-account-manager-lamdaemon
 ```
 
-### 9.2 Update PHP memory limit to 256M
+### 13.2 Update PHP memory limit to 256M
 ```bash
  nano /etc/php/8.4/apache2/php.ini
 ```
 ```bash
 memory_limit = 256M
 ```
-### 9.3 Secure IP range to connect 
+### 13.3 Secure IP range to connect 
 
 ```bash
  nano /etc/apache2/conf-enabled/ldap-account-manager.conf
@@ -647,31 +681,31 @@ memory_limit = 256M
 #Require all granted
 Require ip 127.0.0.1 192.168.10.0/24
 ```
-### 9.3 Restart service Apache2
+### 13.3 Restart service Apache2
 
 ```conf
 sudo systemctl restart apache2
 ```
 
-### 9.4 Try web acces
+### 13.4 Try web acces
 http://LDAP-IP/lam
 <p align="center">
     <img src="Images/LAM/LAM-Cover.png">
 </p>
 
-### 9.5 Click the menu "LAM configuration" on the top right.
+### 13.5 Click the menu "LAM configuration" on the top right.
 <p align="center">
     <img src="Images/LAM/LAM-Edit-Profiles.png">
 </p>
 
-### 9.6 Click "Edit server profiles" to modify the OpenLDAP profile.
+### 13.6 Click "Edit server profiles" to modify the OpenLDAP profile.
 * User: lam
 * pass: lam
 <p align="center">
     <img src="Images/LAM/LAM-Acces-Profile.png">
 </p>
 
-### 9.7 Change default password LAM 
+### 13.7 Change default password LAM 
 On the first tab, "General Settings," scroll all the way down to the section
 labeled "Profile Password" and enter the new password twice.
 <p align="center">
@@ -693,7 +727,7 @@ On the Profile password, input the new password and repeat.
 
 ⚠️ We recommnded change login method in server preferences to LDAP search
 
-### 9.8 Edit users and groups directory
+### 13.8 Edit users and groups directory
 
 Next, click on the Account Types section the configure the following section:
 <p align="center">
@@ -703,8 +737,5 @@ On the Users section, input the default base domain for OpenLDAP users. In his c
 On the Groups section, input the default base domain for the group. In this case, the default other group is Groups.
 Click Save to apply the changes.
 
-
-
-## 5 Configure LAM 
 
 
