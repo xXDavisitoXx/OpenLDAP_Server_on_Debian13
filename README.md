@@ -523,7 +523,7 @@ olcAccess: {3}to dn.subtree="dc=computer,dc=academy,dc=com"
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ACL.ldif
 ```
 
-## 9 Activate SincProv:
+## 9 Activate SincProv on LDAP-1 and LDAP-2:
 
 ### 9.1 create SincProv.ldif:
 ```bash
@@ -549,7 +549,7 @@ olcSpSessionLog: 100
 sudo ldapadd -Y EXTERNAL -H ldapi:/// -f syncprov.ldif
 ```
 
-## 10 Create server ID:
+## 10 Create server ID on LDAP-1 and LDAP-2:
 
 ### 10.1 Create ServerID.ldif
 ```bash
@@ -578,7 +578,7 @@ Import:
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ServerID.ldif
 ```
 
-## 11 Activate SyncRepl
+## 11 Activate SyncRepl on LDAP-1 nad LDAP-2
 
 ### 11.1 Create SyncRepl.ldif
 ```bash
@@ -630,7 +630,7 @@ Check:
 ```bash
 sudo ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b "olcDatabase={1}mdb,cn=config" olcSyncrepl
 ```
-## 12 Activate Mirror mode
+## 12 Activate Mirror mode on LDAP-1 and LDAP-2
 
 ### 12.1 Create Mirror.ldif
 ```bash
