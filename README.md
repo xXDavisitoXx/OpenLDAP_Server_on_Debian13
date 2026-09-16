@@ -594,10 +594,25 @@ Import:
 ```bash
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f SyncRepl.ldif
 ```
-
 Check: 
 ```bash
 sudo ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b "olcDatabase={1}mdb,cn=config" olcSyncrepl
+```
+### 8.5 Activate Mirror mode
+```bash
+nano Mirror.ldif
+```
+```conf
+# Mirror.ldif
+
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+add: olcMirrorMode
+olcMirrorMode: TRUE
+```
+Import
+```bash
+sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f Mirror.ldif
 ```
 ## 9 Install and configure LAM 
 
