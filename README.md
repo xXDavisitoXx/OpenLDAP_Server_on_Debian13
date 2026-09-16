@@ -505,6 +505,29 @@ olcAccess: {3}to dn.subtree="dc=computer,dc=academy,dc=com"
 ```bash
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ACL.ldif
 ```
+8.3 Activate SincProv:
+
+```bash
+nano syncprov.ldif
+```
+
+```bash
+dn: cn=module{0},cn=config
+changetype: modify
+add: olcModuleLoad
+olcModuleLoad: syncprov.la
+
+dn: olcOverlay=syncprov,olcDatabase={1}mdb,cn=config
+objectClass: olcOverlayConfig
+objectClass: olcSyncProvConfig
+olcOverlay: syncprov
+olcSpCheckpoint: 100 10
+olcSpSessionLog: 100
+```
+
+```bash
+sudo ldapadd -Y EXTERNAL -H ldapi:/// -f syncprov.ldif
+```
 
 ## 9 Install and configure LAM 
 
