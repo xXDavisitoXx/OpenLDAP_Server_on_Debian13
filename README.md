@@ -547,6 +547,10 @@ changetype: modify
 add: olcServerID
 olcServerID: 2 ldap://YOUR-LDAP-IP
 ```
+Import:
+```bash
+sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f serverid.ldif
+```
 
 ## 9 Install and configure LAM 
 
