@@ -538,20 +538,67 @@ LDAP-1:
 dn: cn=config
 changetype: modify
 add: olcServerID
-olcServerID: 1 ldap://YOUR-LDAP-IP
+olcServerID: 1 ldap://IP-LDAP-1
 ```
 LDAP-2:
 ```conf
 dn: cn=config
 changetype: modify
 add: olcServerID
-olcServerID: 2 ldap://YOUR-LDAP-IP
+olcServerID: 2 ldap://IP-LDAP-2
 ```
 Import:
 ```bash
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f serverid.ldif
 ```
 
+### 8.5 Configure SyncRepl
+```bash
+nano SyncRepl.ldif
+```
+LDAP-1:
+```conf
+# SyncRepl.ldif
+
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+add: olcSyncrepl
+olcSyncrepl: rid=001
+ provider=ldap://IP-LDAP02
+ bindmethod=simple
+ binddn="uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
+ credentials=changeme2
+ searchbase="dc=computer,dc=academy,dc=com"
+ type=refreshAndPersist
+ retry="5 5 300 +"
+ timeout=1
+```
+LDAP-2:
+```conf
+# SyncRepl.ldif
+
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+add: olcSyncrepl
+olcSyncrepl: rid=002
+ provider=ldap://IP-LDAP01
+ bindmethod=simple
+ binddn="uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
+ credentials=changeme1
+ searchbase=dc=computer,dc=academy,dc=com"
+ type=refreshAndPersist
+ retry="5 5 300 +"
+ timeout=1
+```
+Import:
+```bash
+sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f SyncRepl.ldif
+```
+
+Check: 
+```bash
+sudo ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b "olcDatabase={1}mdb,cn=config" olcSyncrepl
+```
 ## 9 Install and configure LAM 
 
 ### 9.1 Download and install Packet
