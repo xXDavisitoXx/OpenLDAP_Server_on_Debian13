@@ -473,7 +473,7 @@ delete: olcAccess
 olcAccess: {2}to * by * read
 -
 add: olcAccess
-olcAccess: {2}to dn.subtree="dc=correodip,dc=exteriores,dc=gob,dc=es"
+olcAccess: {2}to dn.subtree="dc=computer,dc=academy,dc=com"
   by group.exact="cn=Administrators-LAM,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" write
   by self write
   by users read
@@ -490,12 +490,12 @@ olcAccess: {2}to * by * read
 -
 add: olcAccess
 olcAccess: {2}to dn.subtree="dc=correodip,dc=exteriores,dc=gob,dc=es"
-  by group.exact="cn=Replicadores-LDAP,ou=Aplicaciones,ou=Grupos,dc=correodip,dc=exteriores,dc=gob,dc=es" read
+  by group.exact="cn=LDAP-Replicators,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" read
   by * break
 -
 add: olcAccess
-olcAccess: {3}to dn.subtree="dc=correodip,dc=exteriores,dc=gob,dc=es"
-  by group.exact="cn=Administradores-LAM,ou=Aplicaciones,ou=Grupos,dc=correodip,dc=exteriores,dc=gob,dc=es" write
+olcAccess: {3}to dn.subtree="dc=computer,dc=academy,dc=com"
+  by group.exact="cn=Administrators-LAM,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" write
   by self write
   by users read
   by * none
