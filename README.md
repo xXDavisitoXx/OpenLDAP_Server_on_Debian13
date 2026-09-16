@@ -505,8 +505,8 @@ olcAccess: {3}to dn.subtree="dc=computer,dc=academy,dc=com"
 ```bash
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ACL.ldif
 ```
-8.3 Activate SincProv:
 
+### 8.3 Activate SincProv:
 ```bash
 nano syncprov.ldif
 ```
@@ -527,6 +527,17 @@ olcSpSessionLog: 100
 
 ```bash
 sudo ldapadd -Y EXTERNAL -H ldapi:/// -f syncprov.ldif
+```
+
+8.4 Create server ID:
+```bash
+nano serverid.ldif 
+```
+```conf
+dn: cn=config
+changetype: modify
+add: olcServerID
+olcServerID: 1 ldap://YOUR-LDAP-IP
 ```
 
 ## 9 Install and configure LAM 
