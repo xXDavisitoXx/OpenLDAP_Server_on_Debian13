@@ -529,15 +529,23 @@ olcSpSessionLog: 100
 sudo ldapadd -Y EXTERNAL -H ldapi:/// -f syncprov.ldif
 ```
 
-8.4 Create server ID:
+### 8.4 Create server ID:
 ```bash
 nano serverid.ldif 
 ```
+LDAP-1:
 ```conf
 dn: cn=config
 changetype: modify
 add: olcServerID
 olcServerID: 1 ldap://YOUR-LDAP-IP
+```
+LDAP-2:
+```conf
+dn: cn=config
+changetype: modify
+add: olcServerID
+olcServerID: 2 ldap://YOUR-LDAP-IP
 ```
 
 ## 9 Install and configure LAM 
