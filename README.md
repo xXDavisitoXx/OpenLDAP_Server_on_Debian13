@@ -602,7 +602,8 @@ sudo ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b "olcDatabase={1}mdb,cn=config" 
 ```bash
 nano Mirror.ldif
 ```
-```conf
+```conf[Uploading Zabbix Official Repository.download…]()
+
 # Mirror.ldif
 
 dn: olcDatabase={1}mdb,cn=config
@@ -610,10 +611,17 @@ changetype: modify
 add: olcMirrorMode
 olcMirrorMode: TRUE
 ```
-Import
+
+Import:
 ```bash
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f Mirror.ldif
 ```
+
+Check:
+```bash
+sudo ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b "olcDatabase={1}mdb,cn=config" olcMirrorMode
+```
+
 ## 9 Install and configure LAM 
 
 ### 9.1 Download and install Packet
