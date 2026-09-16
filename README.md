@@ -615,7 +615,7 @@ olcSyncrepl: rid=002
  bindmethod=simple
  binddn="uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
  credentials=changeme1
- searchbase=dc=computer,dc=academy,dc=com"
+ searchbase="dc=computer,dc=academy,dc=com"
  type=refreshAndPersist
  retry="5 5 300 +"
  timeout=1
