@@ -561,7 +561,7 @@ LDAP-1:
 dn: cn=config
 changetype: modify
 add: olcServerID
-olcServerID: 1 ldap://IP-LDAP-1
+olcServerID: 1
 ```
 
 LDAP-2:
@@ -569,7 +569,7 @@ LDAP-2:
 dn: cn=config
 changetype: modify
 add: olcServerID
-olcServerID: 2 ldap://IP-LDAP-2
+olcServerID: 2
 ```
 
 ### 10.2 Import
