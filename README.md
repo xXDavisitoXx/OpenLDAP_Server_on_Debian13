@@ -359,16 +359,11 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-objectClass: posixAccount
-uid: zabbix-service
 cn: Zabbix Service Account
 sn: Service
-givenName: Zabbix
-uidNumber: 1003
-gidNumber: 1003
-homeDirectory: /nonexistent
-loginShell: /sbin/nologin
+uid: zabbix-service
 userPassword: {SSHA}R7xTc2PnLmQ4VbY9KwEjF5ZdNsAuHcG3
+description: Service account for monitoring LDAP
 ```
 
 ### 5.2 Import Users 
