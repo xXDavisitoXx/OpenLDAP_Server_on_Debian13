@@ -393,15 +393,8 @@ objectClass: top
 objectClass: groupOfNames
 cn: LDAP-Writers
 member: uid=user1,ou=Active,ou=Users,dc=computer,dc=academy,dc=com
-description: Group for user accounts that write LDAP
-
-dn: cn=LAM-Administrators,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com
-objectClass: top
-objectClass: groupOfNames
-cn: LAM-Administrators
 member: uid=lam-service,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
-member: uid=user1,ou=Active,ou=Users,dc=computer,dc=academy,dc=com
-description: Group for the LAM service account with administrative permissions over LDAP
+description: Group for user accounts that write LDAP
 
 dn: cn=Linux-Administrators,ou=System,ou=Groups,dc=computer,dc=academy,dc=com
 objectClass: top
@@ -486,7 +479,7 @@ olcAccess: {2}to * by * read
 -
 add: olcAccess
 olcAccess: {2}to dn.subtree="dc=computer,dc=academy,dc=com"
-  by group.exact="cn=Administrators-LAM,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" write
+  by group.exact="cn=LDAP-Writers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" write
   by * none
 ```
 
@@ -500,15 +493,13 @@ delete: olcAccess
 olcAccess: {2}to * by * read
 -
 add: olcAccess
-olcAccess: {2}to dn.subtree="dc=correodip,dc=exteriores,dc=gob,dc=es"
-  by group.exact="cn=Lectura-LDAP,ou=Aplicaciones,ou=Grupos,dc=correodip,dc=exteriores,dc=gob,dc=es" read
+olcAccess: {2}to dn.subtree="dc=computer,dc=academy,dc=com"
+  by group.exact="cn=LDAP-Readers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" read
   by * break
 -
 add: olcAccess
-olcAccess: {3}to dn.subtree="dc=correodip,dc=exteriores,dc=gob,dc=es"
-  by group.exact="cn=Administradores-LAM,ou=Aplicaciones,ou=Grupos,dc=correodip,dc=exteriores,dc=gob,dc=es" write
-  by group.exact="cn=Escritura-LDAP,ou=Aplicaciones,ou=Grupos,dc=correodip,dc=exteriores,dc=gob,dc=es" write
-  by self write
+olcAccess: {3}to dn.subtree="dc=computer,dc=academy,dc=com"
+  by group.exact="cn=LDAP-Writers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" write
   by * none
 ```
 
