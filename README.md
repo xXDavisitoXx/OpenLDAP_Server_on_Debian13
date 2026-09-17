@@ -593,14 +593,14 @@ dn: olcDatabase={1}mdb,cn=config
 changetype: modify
 add: olcSyncrepl
 olcSyncrepl: rid=001
- provider=ldap://IP-LDAP02
- bindmethod=simple
- binddn="uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
- credentials=changeme2
- searchbase="dc=computer,dc=academy,dc=com"
- type=refreshAndPersist
- retry="5 5 300 +"
- timeout=1
+  provider=ldap://IP-LDAP-2
+  bindmethod=simple
+  binddn="uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
+  credentials="LDAP-Syncer-PASS"
+  searchbase="dc=computer,dc=academy,dc=com"
+  type=refreshAndPersist
+  retry="5 5 300 +"
+  timeout=1
 ```
 
 LDAP-2:
@@ -611,14 +611,14 @@ dn: olcDatabase={1}mdb,cn=config
 changetype: modify
 add: olcSyncrepl
 olcSyncrepl: rid=002
- provider=ldap://IP-LDAP01
- bindmethod=simple
- binddn="uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
- credentials=changeme1
- searchbase="dc=computer,dc=academy,dc=com"
- type=refreshAndPersist
- retry="5 5 300 +"
- timeout=1
+  provider=ldap://IP-LDAP-1
+  bindmethod=simple
+  binddn="uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
+  credentials="LDAP-Syncer-PASS"
+  searchbase="dc=computer,dc=academy,dc=com"
+  type=refreshAndPersist
+  retry="5 5 300 +"
+  timeout=1
 ```
 
 ### 11.2 Import:
