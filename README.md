@@ -385,19 +385,20 @@ nano Groups.ldif
 ```conf
 # Groups.ldif
 
-dn: cn=LDAP-Replicators,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com
+dn: cn=LDAP-Readers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com
 objectClass: top
 objectClass: groupOfNames
-cn: LDAP-Replicators
-description: Authorized account group for LDAP synchronization
+cn: LDAP-Readers
 member: uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
+member: uid=zabbix-service,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
+description: Corporate group of authorized LDAP synchronization and monitoring accounts
 
-dn: cn=LDAP-Administrators,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com
+dn: cn=LDAP-Writers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com
 objectClass: top
 objectClass: groupOfNames
-cn: LDAP-Administrators
+cn: LDAP-Writers
 member: uid=user1,ou=Active,ou=Users,dc=computer,dc=academy,dc=com
-description: Group for user accounts that administer LDAP
+description: Group for user accounts that write LDAP
 
 dn: cn=LAM-Administrators,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com
 objectClass: top
@@ -507,14 +508,14 @@ olcAccess: {2}to * by * read
 -
 add: olcAccess
 olcAccess: {2}to dn.subtree="dc=correodip,dc=exteriores,dc=gob,dc=es"
-  by group.exact="cn=LDAP-Replicators,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" read
+  by group.exact="cn=Lectura-LDAP,ou=Aplicaciones,ou=Grupos,dc=correodip,dc=exteriores,dc=gob,dc=es" read
   by * break
 -
 add: olcAccess
-olcAccess: {3}to dn.subtree="dc=computer,dc=academy,dc=com"
-  by group.exact="cn=Administrators-LAM,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" write
+olcAccess: {3}to dn.subtree="dc=correodip,dc=exteriores,dc=gob,dc=es"
+  by group.exact="cn=Administradores-LAM,ou=Aplicaciones,ou=Grupos,dc=correodip,dc=exteriores,dc=gob,dc=es" write
+  by group.exact="cn=Escritura-LDAP,ou=Aplicaciones,ou=Grupos,dc=correodip,dc=exteriores,dc=gob,dc=es" write
   by self write
-  by users read
   by * none
 ```
 
