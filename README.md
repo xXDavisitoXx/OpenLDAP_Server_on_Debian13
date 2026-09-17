@@ -487,7 +487,6 @@ olcAccess: {2}to * by * read
 add: olcAccess
 olcAccess: {2}to dn.subtree="dc=computer,dc=academy,dc=com"
   by group.exact="cn=Administrators-LAM,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" write
-  by self write
   by * none
 ```
 
