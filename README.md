@@ -364,6 +364,17 @@ sn: Service
 uid: zabbix-service
 userPassword: {SSHA}R7xTc2PnLmQ4VbY9KwEjF5ZdNsAuHcG3
 description: Service account for monitoring LDAP
+
+dn: uid=Wiki-Authenticator,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Wiki-Authenticator
+sn: Wiki-Authenticator
+uid: Wiki-Authenticator
+userPassword: {SSHA}M1xY9vRXEp4Qm6bAqjK8T8J8K0YV8s4v
+description: Service account for MediaWiki authentication
 ```
 
 ### 5.2 Import Users 
@@ -386,6 +397,7 @@ objectClass: groupOfNames
 cn: LDAP-Readers
 member: uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
 member: uid=zabbix-service,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
+member: uid=Wiki-Authenticator,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
 description: Corporate group of authorized LDAP synchronization and monitoring accounts
 
 dn: cn=LDAP-Writers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com
@@ -410,12 +422,12 @@ cn: SSH-Access
 gidNumber: 2002
 description: POSIX group used to restrict remote SSH access to authorized users
 
-dn: cn=Wiki-Users,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com
+dn: cn=Wiki-Access,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com
 objectClass: top
-objectClass: posixGroup
-cn: Wiki-Users
-gidNumber: 2003
-description: Group for user accounts that can access the Wiki
+objectClass: groupOfNames
+cn: Wiki-Access
+member: uid=user1,ou=Active,ou=Users,dc=computer,dc=academy,dc=com
+description: Authorized users for MediaWiki access
 ```
 
 ### 6.2 Import Groups
