@@ -521,7 +521,7 @@ sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ACL.ldif
 ```
 
 # Multimaster
-
+```conf
  LDAP01 completo
 ↓
 Exportar
@@ -535,6 +535,7 @@ Configurar replicación
 Comprobar que replica
 ↓
 Instalar LAM
+```
 
 ## 9 Activate SincProv on LDAP-1 and LDAP-2:
 
