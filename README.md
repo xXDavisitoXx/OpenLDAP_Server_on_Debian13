@@ -520,6 +520,22 @@ olcAccess: {3}to dn.subtree="dc=computer,dc=academy,dc=com"
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ACL.ldif
 ```
 
+# Multimaster
+
+ LDAP01 completo
+↓
+Exportar
+↓
+Crear LDAP02
+↓
+Verificar que LDAP02 funciona
+↓
+Configurar replicación
+↓
+Comprobar que replica
+↓
+Instalar LAM
+
 ## 9 Activate SincProv on LDAP-1 and LDAP-2:
 
 ### 9.1 create SincProv.ldif:
