@@ -770,7 +770,11 @@ Click Save to apply the changes.
 
 ## Hosts
 
-Create file /etc/sssd.conf
+### Install basic software
+```bash
+sudo apt install sssd sssd-tools libnss-sss libpam-sss sudo-ldap
+```
+### Create file /etc/sssd.conf
 ```bash
 nano /etc/sssd.conf
 ```
