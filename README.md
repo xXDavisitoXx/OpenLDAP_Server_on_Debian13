@@ -797,7 +797,7 @@ auth_provider = ldap
 chpass_provider = ldap
 sudo_provider = ldap
 
-cache_credentials = True
+cache_credentials = False
 enumerate = False
 
 ldap_uri = ldap://LDAP01-IP,ldap://LDAP02-IP
