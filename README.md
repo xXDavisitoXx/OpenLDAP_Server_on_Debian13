@@ -694,7 +694,7 @@ sudo ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b "olcDatabase={1}mdb,cn=config" 
 ```bash
 sudo apt install ldap-account-manager
 ```
-⚠️ If you want to manage home directories and quotas on client hosts, you must use the `ldap-account-manager-lamdaemon` package.
+⚠️ If you want to manage home directories and quotas on client hosts, you must use the `ldap-account-manager-lamdaemon` package on the LDAP clients.
 
 ### 13.2 Update PHP memory limit to 256M
 ```bash
