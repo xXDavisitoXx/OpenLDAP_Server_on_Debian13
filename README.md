@@ -296,27 +296,27 @@ nano Users.ldif
 ```conf
 # Users.ldif
 
-dn: uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
+dn: uid=LDAP-Writer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
 objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-uid: LDAP-Syncer
-cn: LDAP-Syncer
-sn: LDAP-Syncer
-userPassword: {SSHA}XyZ12345abcdef67890GhIjKlMnOpQrS
-description: Service account for multi-master replication between LDAP nodes
-
-dn: uid=lam-service,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
-objectClass: top
-objectClass: person
-objectClass: organizationalPerson
-objectClass: inetOrgPerson
-uid: lam-service
-cn: LAM Service Account
-sn: Service
+uid: LDAP-Writer
+cn: LDAP-Writer
+sn: LDAP-Writer
 userPassword: {SSHA}K9sL4Ny7jVwq8Bt2cWmYF7RzP1XeHkQa
-description: Service account used by LAM to administer LDAP
+description: Service account for writing to the LDAP tree
+
+dn: uid=LDAP-Reader,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: LDAP-Reader
+cn: LDAP-Reader
+sn: LDAP-Reader
+userPassword: {SSHA}XyZ12345abcdef67890GhIjKlMnOpQrS
+description: Service account for reading to the LDAP tree
 
 dn: uid=user1,ou=Active,ou=Users,dc=computer,dc=academy,dc=com
 objectClass: top
@@ -364,17 +364,6 @@ sn: Service
 uid: zabbix-service
 userPassword: {SSHA}R7xTc2PnLmQ4VbY9KwEjF5ZdNsAuHcG3
 description: Service account for monitoring LDAP
-
-dn: uid=Wiki-Authenticator,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
-objectClass: inetOrgPerson
-objectClass: organizationalPerson
-objectClass: person
-objectClass: top
-cn: Wiki-Authenticator
-sn: Wiki-Authenticator
-uid: Wiki-Authenticator
-userPassword: {SSHA}M1xY9vRXEp4Qm6bAqjK8T8J8K0YV8s4v
-description: Service account for MediaWiki authentication
 ```
 
 ### 5.2 Import Users 
@@ -391,29 +380,28 @@ nano Groups.ldif
 ```conf
 # Groups.ldif
 
-dn: cn=LDAP-Readers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com
-objectClass: top
-objectClass: groupOfNames
-cn: LDAP-Readers
-member: uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
-member: uid=zabbix-service,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
-member: uid=Wiki-Authenticator,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
-description: Corporate group of authorized LDAP synchronization and monitoring accounts
-
 dn: cn=LDAP-Writers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com
 objectClass: top
 objectClass: groupOfNames
 cn: LDAP-Writers
+member: uid=LDAP-Writer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
 member: uid=user1,ou=Active,ou=Users,dc=computer,dc=academy,dc=com
-member: uid=lam-service,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
 description: Group for user accounts that write LDAP
+
+dn: cn=LDAP-Readers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com
+objectClass: top
+objectClass: groupOfNames
+cn: LDAP-Readers
+member: uid=LDAP-Reader,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
+member: uid=zabbix-service,ou=Services,ou=Users,dc=computer,dc=academy,dc=com
+description: Group for user accounts that read LDAP
 
 dn: cn=Linux-Administrators,ou=System,ou=Groups,dc=computer,dc=academy,dc=com
 objectClass: top
 objectClass: posixGroup
 cn: Linux-Administrators
 gidNumber: 2001
-description: Group for user accounts that administer Linux systems
+description: Group for user accounts that administer Linux systems using sudo comand
 
 dn: cn=SSH-Access,ou=System,ou=Groups,dc=computer,dc=academy,dc=com
 objectClass: top
@@ -475,12 +463,11 @@ ldapadd -x -D "cn=admin,dc=computer,dc=academy,dc=com" -W -f Roles.ldif
 
 ## 8 Create ACL lists
 
-### 8.1 Create ACL to LAM and LDAP replication
+### 8.1 Create ACLs to assign permissions and protect the LDAP tree from anonymous queries.
 ```bash
 nano ACL.ldif 
 ```
 
-No replication:
 ```conf
 # ACL.ldif
 
@@ -490,28 +477,9 @@ delete: olcAccess
 olcAccess: {2}to * by * read
 -
 add: olcAccess
-olcAccess: {2}to dn.subtree="dc=computer,dc=academy,dc=com"
-  by group.exact="cn=LDAP-Writers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" write
-  by * none
-```
-
-With replication
-```conf
-# ACL.ldif
-
-dn: olcDatabase={1}mdb,cn=config
-changetype: modify
-delete: olcAccess
-olcAccess: {2}to * by * read
--
-add: olcAccess
-olcAccess: {2}to dn.subtree="dc=computer,dc=academy,dc=com"
-  by group.exact="cn=LDAP-Readers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" read
-  by * break
--
-add: olcAccess
-olcAccess: {3}to dn.subtree="dc=computer,dc=academy,dc=com"
-  by group.exact="cn=LDAP-Writers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" write
+olcAccess: {2}to dn.subtree="dc=correodip,dc=exteriores,dc=gob,dc=es"
+  by group.exact="cn=Escritura-LDAP,ou=Aplicaciones,ou=Grupos,dc=correodip,dc=exteriores,dc=gob,dc=es" write
+  by group.exact="cn=Lectura-LDAP,ou=Aplicaciones,ou=Grupos,dc=correodip,dc=exteriores,dc=gob,dc=es" read
   by * none
 ```
 
