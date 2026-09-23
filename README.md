@@ -488,6 +488,54 @@ olcAccess: {2}to dn.subtree="dc=computer,dc=academy,dc=com"
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ACL.ldif
 ```
 
+### 9.0 Advanced Indexing
+```conf
+
+# Indices.ldif
+
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+
+add: olcDbIndex
+olcDbIndex: objectClass eq
+
+add: olcDbIndex
+olcDbIndex: entryCSN eq
+
+add: olcDbIndex
+olcDbIndex: entryUUID eq
+
+add: olcDbIndex
+olcDbIndex: uid eq
+
+add: olcDbIndex
+olcDbIndex: cn eq,sub
+
+add: olcDbIndex
+olcDbIndex: sn eq,sub
+
+add: olcDbIndex
+olcDbIndex: member eq
+
+add: olcDbIndex
+olcDbIndex: memberUid eq
+
+add: olcDbIndex
+olcDbIndex: uidNumber eq
+
+add: olcDbIndex
+olcDbIndex: gidNumber eq
+
+add: olcDbIndex
+olcDbIndex: mail eq
+```
+
+```bash
+sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f Indices.ldif
+sudo slapindex -n 1
+sudo systemctl restart slapd
+```
+
 # Multimaster
 ```conf
  LDAP01 completo
