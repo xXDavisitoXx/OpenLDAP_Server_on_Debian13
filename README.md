@@ -768,5 +768,56 @@ On the Users section, input the default base domain for OpenLDAP users. In his c
 On the Groups section, input the default base domain for the group. In this case, the default other group is Groups.
 Click Save to apply the changes.
 
+## Hosts
 
+Create file /etc/sssd.conf
+```bash
+nano /etc/sssd.conf
+```
 
+```conf
+[sssd]
+config_file_version = 2
+services = nss, pam, ssh, sudo
+domains = computer.academy.com
+
+[nss]
+homedir_substring = /home
+
+[pam]
+
+[domain/computer.academy.com]
+
+id_provider = ldap
+auth_provider = ldap
+chpass_provider = ldap
+sudo_provider = ldap
+
+cache_credentials = True
+enumerate = False
+
+ldap_uri = ldap://LDAP01-IP,ldap://LDAP02-IP
+ldap_search_base = dc=computer,dc=academy,dc=com
+
+ldap_default_bind_dn = uid=LDAP-Reader,ou=Servicios,ou=Usuarios,dc=computer,dc=academy,dc=com
+ldap_default_authtok_type = password
+ldap_default_authtok = SyncroDAP66$
+
+ldap_user_search_base = ou=Activos,ou=Usuarios,dc=computer,dc=academy,dc=com
+ldap_group_search_base = ou=Grupos,dc=computer,dc=academy,dc=com
+ldap_sudo_search_base = ou=Sudoers,ou=Roles,dc=computer,dc=academy,dc=com
+
+ldap_schema = rfc2307bis
+
+ldap_user_object_class = posixAccount
+ldap_group_object_class = posixGroup
+
+ldap_tls_reqcert = demand
+ldap_id_use_start_tls = true
+
+fallback_homedir = /home/%u
+default_shell = /bin/bash
+
+access_provider = ldap
+ldap_access_filter = (memberOf=cn=Acceso-SSH,ou=Sistema,ou=Grupos,dc=computer,dc=academy,dc=com)
+```
