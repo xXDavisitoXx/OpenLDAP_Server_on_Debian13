@@ -478,8 +478,8 @@ olcAccess: {2}to * by * read
 -
 add: olcAccess
 olcAccess: {2}to dn.subtree="dc=correodip,dc=exteriores,dc=gob,dc=es"
-  by group.exact="cn=Escritura-LDAP,ou=Aplicaciones,ou=Grupos,dc=correodip,dc=exteriores,dc=gob,dc=es" write
-  by group.exact="cn=Lectura-LDAP,ou=Aplicaciones,ou=Grupos,dc=correodip,dc=exteriores,dc=gob,dc=es" read
+  by group.exact="cn=LDAP-Writers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" write
+  by group.exact="cn=LDAP-Readers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" read
   by * none
 ```
 
