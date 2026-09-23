@@ -803,8 +803,8 @@ ldap_default_bind_dn = uid=LDAP-Reader,ou=Servicios,ou=Usuarios,dc=computer,dc=a
 ldap_default_authtok_type = password
 ldap_default_authtok = YOUR-PASS
 
-ldap_user_search_base = ou=Activos,ou=Usuarios,dc=computer,dc=academy,dc=com
-ldap_group_search_base = ou=Grupos,dc=computer,dc=academy,dc=com
+ldap_user_search_base = ou=Users,dc=computer,dc=academy,dc=com
+ldap_group_search_base = ou=Groups,dc=computer,dc=academy,dc=com
 ldap_sudo_search_base = ou=Sudoers,ou=Roles,dc=computer,dc=academy,dc=com
 
 ldap_schema = rfc2307bis
