@@ -491,7 +491,6 @@ sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ACL.ldif
 ### 9.0 Advanced Indexing
 
 ```conf
-
 # Index.ldif
 
 dn: olcDatabase={1}mdb,cn=config
@@ -529,6 +528,15 @@ olcDbIndex: gidNumber eq
 
 add: olcDbIndex
 olcDbIndex: mail eq
+
+add: olcDbIndex
+olcDbIndex: loginShell eq
+
+add: olcDbIndex
+olcDbIndex: sudoUser eq
+
+add: olcDbIndex
+olcDbIndex: sudoHost eq
 ```
 
 ```bash
@@ -661,7 +669,7 @@ Check:
 ```bash
 sudo ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b "olcDatabase={1}mdb,cn=config" olcSyncrepl
 ```
-## 12 Activate Mirror mode on LDAP-1 and LDAP-2
+## 12 Activate Mirror mode on LDAP-1 and LDAP-2 (Only Master-Slave)
 
 ### 12.1 Create Mirror.ldif
 ```bash
