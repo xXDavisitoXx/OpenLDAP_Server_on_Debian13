@@ -801,7 +801,7 @@ ldap_search_base = dc=computer,dc=academy,dc=com
 
 ldap_default_bind_dn = uid=LDAP-Reader,ou=Servicios,ou=Usuarios,dc=computer,dc=academy,dc=com
 ldap_default_authtok_type = password
-ldap_default_authtok = SyncroDAP66$
+ldap_default_authtok = YOUR-PASS
 
 ldap_user_search_base = ou=Activos,ou=Usuarios,dc=computer,dc=academy,dc=com
 ldap_group_search_base = ou=Grupos,dc=computer,dc=academy,dc=com
@@ -819,5 +819,5 @@ fallback_homedir = /home/%u
 default_shell = /bin/bash
 
 access_provider = ldap
-ldap_access_filter = (memberOf=cn=Acceso-SSH,ou=Sistema,ou=Grupos,dc=computer,dc=academy,dc=com)
+ldap_access_filter = (memberOf=cn=SSH-Access,ou=System,ou=Groups,dc=computer,dc=academy,dc=com)
 ```
