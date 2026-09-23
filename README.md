@@ -477,7 +477,7 @@ delete: olcAccess
 olcAccess: {2}to * by * read
 -
 add: olcAccess
-olcAccess: {2}to dn.subtree="dc=correodip,dc=exteriores,dc=gob,dc=es"
+olcAccess: {2}to dn.subtree="dc=computer,dc=academy,dc=com"
   by group.exact="cn=LDAP-Writers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" write
   by group.exact="cn=LDAP-Readers,ou=Applications,ou=Groups,dc=computer,dc=academy,dc=com" read
   by * none
