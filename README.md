@@ -489,9 +489,10 @@ sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f ACL.ldif
 ```
 
 ### 9.0 Advanced Indexing
+
 ```conf
 
-# Indices.ldif
+# Index.ldif
 
 dn: olcDatabase={1}mdb,cn=config
 changetype: modify
@@ -531,7 +532,7 @@ olcDbIndex: mail eq
 ```
 
 ```bash
-sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f Indices.ldif
+sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f Index.ldif
 sudo slapindex -n 1
 sudo systemctl restart slapd
 ```
