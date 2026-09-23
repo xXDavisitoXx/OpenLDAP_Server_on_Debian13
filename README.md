@@ -538,11 +538,36 @@ olcDbIndex: sudoUser eq
 add: olcDbIndex
 olcDbIndex: sudoHost eq
 ```
-
+Apply:
 ```bash
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f Index.ldif
+```
+
+Check:
+```bash
+sudo ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b "olcDatabase={1}mdb,cn=config" olcDbIndex
+```
+Stop the service:
+```bash
+sudo systemctl stop slapd
+```
+Regenerate index:
+```bash
 sudo slapindex -n 1
-sudo systemctl restart slapd
+```
+Change owner files:
+```bash
+sudo chown -R openldap:openldap /var/lib/ldap/
+```
+
+Check owner files:
+```bash
+sudo ls -la /var/lib/ldap/
+```
+
+Start the service:
+```bash
+sudo systemctl start slapd
 ```
 
 # Multimaster
