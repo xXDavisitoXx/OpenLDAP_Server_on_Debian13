@@ -700,7 +700,11 @@ In a multi-master OpenLDAP environment, it is common practice to enable TLS usin
 
 ```bash
 mkdir /root/ca
+```
+```bash
 cd /root/ca
+```
+```bash
 openssl genrsa -out ca.key 4096
 openssl req -new -x509 \
 -days 3650 \
