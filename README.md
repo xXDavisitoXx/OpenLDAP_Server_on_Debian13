@@ -700,6 +700,7 @@ In a multi-master OpenLDAP environment, it is common practice to enable TLS usin
 
 ```bash
 mkdir /root/ca
+
 cd /root/ca
 
 openssl genrsa -out ca.key 4096
@@ -708,7 +709,7 @@ openssl req -new -x509 \
 -days 3650 \
 -key ca.key \
 -out ca.crt \
--subj "/C=ES/O=Computer_Academy/CN=Computer_Academy_LDAP_CA"
+-subj "/C=US/O=Computer_Academy/CN=Computer_Academy_LDAP_CA"
 ```
 
 ### Generate a certificate for each LDAP node
@@ -726,15 +727,14 @@ openssl req -new \
 ```
 LDAP02:
 ```bash
-openssl genrsa -out ldap01.key 4096
+openssl genrsa -out ldap02.key 4096
 ```
 
 ```bash
-openssl req -new -x509 \
--days 3650 \
--key ca.key \
--out ca.crt \
--subj "/C=US/O=Computer_Academy/CN=Computer_Academy_LDAP_CA"
+openssl req -new \
+-key ldap02.key \
+-out ldap02.csr \
+-subj "/C=US/O=Computer_Academy/CN=ldap01.computer.academy"
 ```
 
 ## 13 Install and configure LAM 
