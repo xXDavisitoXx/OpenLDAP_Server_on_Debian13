@@ -735,7 +735,7 @@ openssl genrsa -out ldap02.key 4096
 openssl req -new \
 -key ldap02.key \
 -out ldap02.csr \
--subj "/C=US/O=Computer_Academy/CN=ldap01.computer.academy.com"
+-subj "/C=US/O=Computer_Academy/CN=ldap02.computer.academy.com"
 ```
 
 ### Creae SAN files
@@ -895,6 +895,51 @@ cp ca.crt /usr/local/share/ca-certificates/
 ```
 ```bash
 update-ca-certificates
+```
+### TLS on multimaster
+Modify SyncRepl on each LDAP:
+```bash
+nano Syncrepl.ldif
+```
+
+LDAP01:
+```conf
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+replace: olcSyncrepl
+olcSyncrepl: rid=001
+  provider=ldap://IP-LDAP-2:389
+  starttls=yes
+  bindmethod=simple
+  binddn="uid=LDAP-Reader,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
+  credentials=SyncroDAP66$
+  searchbase="dc=correodip,dc=exteriores,dc=gob,dc=es"
+  type=refreshAndPersist
+  retry="5 5 300 +"
+  timeout=5
+  tls_reqcert=demand
+```
+
+LDAP02:
+```conf
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+replace: olcSyncrepl
+olcSyncrepl: rid=002
+  provider=ldap://IP-LDAP-1:389
+  starttls=yes
+  bindmethod=simple
+  binddn="uid=LDAP-Reader,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
+  credentials=SyncroDAP66$
+  searchbase="dc=correodip,dc=exteriores,dc=gob,dc=es"
+  type=refreshAndPersist
+  retry="5 5 300 +"
+  timeout=5
+  tls_reqcert=demand
+```
+Check: 
+```bash
+journalctl -u slapd -f
 ```
 
 ## 13 Install and configure LAM 
