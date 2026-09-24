@@ -700,8 +700,6 @@ In a multi-master OpenLDAP environment, it is common practice to enable TLS usin
 
 ```bash
 mkdir /root/ca
-```
-```bash
 cd /root/ca
 ```
 ```bash
@@ -771,7 +769,7 @@ IP.1=YOUR-STATIC-IP
 EOF
 ```
 
-### Self-sign the certificate
+### Self-sign the certificates each LDAP
 LDAP01:
 ```bash
 openssl x509 -req \
@@ -820,6 +818,8 @@ chmod 644 /etc/ldap/certs/*.crt
 ### Configure TLS in cn=config LDAP on each node
 Create TLS.ldif on LDAP01:
 ```conf
+# TLS.ldif
+
 dn: cn=config
 changetype: modify
 replace: olcTLSCACertificateFile
@@ -851,19 +851,14 @@ Apply to each node:
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f TLS.ldif
 ```
 
-### Activate LDAPS listener on each node
+### Configure LDAP servers to trust the CA
 ```bash
-sudo nano /etc/default/slapd
+sudo nano /etc/ldap/ldap.conf
 ```
 
-Search 
 ```conf
-SLAPD_SERVICES="ldap:/// ldapi:///"
-```
-
-Replace:
-```conf
-SLAPD_SERVICES="ldap:/// ldaps:/// ldapi:///"
+TLS_CACERT /etc/ldap/certs/ca.crt
+TLS_REQCERT demand
 ```
 
 Restart slapd service
@@ -871,10 +866,6 @@ Restart slapd service
 systemctl restart slapd
 ```
 
-Verify LDAPS por is active
-```bash
-ss -lntp | grep 636
-```
 
 Check TLS:
 
@@ -908,7 +899,7 @@ dn: olcDatabase={1}mdb,cn=config
 changetype: modify
 replace: olcSyncrepl
 olcSyncrepl: rid=001
-  provider=ldap://IP-LDAP-2:389
+  provider=ldap://LDAP02.computer.academy.com
   starttls=yes
   bindmethod=simple
   binddn="uid=LDAP-Reader,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
@@ -926,7 +917,7 @@ dn: olcDatabase={1}mdb,cn=config
 changetype: modify
 replace: olcSyncrepl
 olcSyncrepl: rid=002
-  provider=ldap://IP-LDAP-1:389
+  provider=ldap://LDAP01.computer.academy.com
   starttls=yes
   bindmethod=simple
   binddn="uid=LDAP-Reader,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
@@ -937,9 +928,18 @@ olcSyncrepl: rid=002
   timeout=5
   tls_reqcert=demand
 ```
-Check: 
+```conf
+ldapsearch -ZZ \
+-H ldap://ldap02.midominio.local \
+-D "cn=replicator,dc=midominio,dc=local" \
+-W \
+-b dc=midominio,dc=local
+```
+If the certificate is invalid or the CA is not installed, you will encounter errors such as:
+
 ```bash
-journalctl -u slapd -f
+TLS: peer cert untrusted
+TLS certificate verification failed
 ```
 
 ## 13 Install and configure LAM 
