@@ -912,7 +912,7 @@ olcSyncrepl: rid=001
   starttls=yes
   bindmethod=simple
   binddn="uid=LDAP-Reader,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
-  credentials=SyncroDAP66$
+  credentials=YOUR-PASSWORD
   searchbase="dc=computer,dc=academy,dc=com"
   type=refreshAndPersist
   retry="5 5 300 +"
@@ -930,7 +930,7 @@ olcSyncrepl: rid=002
   starttls=yes
   bindmethod=simple
   binddn="uid=LDAP-Reader,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
-  credentials=SyncroDAP66$
+  credentials=YOUR-PASSWORD
   searchbase="dc=computer,dc=academy,dc=com"
   type=refreshAndPersist
   retry="5 5 300 +"
