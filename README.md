@@ -723,7 +723,7 @@ openssl genrsa -out ldap01.key 4096
 openssl req -new \
 -key ldap01.key \
 -out ldap01.csr \
--subj "/C=US/O=Computer_Academy/CN=ldap01.computer.academy"
+-subj "/C=US/O=Computer_Academy/CN=ldap01.computer.academy.com"
 ```
 LDAP02:
 ```bash
@@ -734,7 +734,120 @@ openssl genrsa -out ldap02.key 4096
 openssl req -new \
 -key ldap02.key \
 -out ldap02.csr \
--subj "/C=US/O=Computer_Academy/CN=ldap01.computer.academy"
+-subj "/C=US/O=Computer_Academy/CN=ldap01.computer.academy.com"
+```
+
+### Creae SAN files
+LDAP01:
+```bash
+cat > ldap01.ext << EOF
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage=digitalSignature,keyEncipherment
+extendedKeyUsage=serverAuth
+subjectAltName=@alt_names
+
+[alt_names]
+DNS.1=ldap01.computer.academy.com
+DNS.2=ldap01
+IP.1=YOUR-STATIC-IP
+EOF
+```
+
+LDAP02:
+```bash
+cat > ldap02.ext << EOF
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage=digitalSignature,keyEncipherment
+extendedKeyUsage=serverAuth
+subjectAltName=@alt_names
+
+[alt_names]
+DNS.1=ldap02.computer.academy.com
+DNS.2=ldap02
+IP.1=YOUR-STATIC-IP
+EOF
+```
+
+### Self-sign the certificate
+LDAP01:
+```bash
+openssl x509 -req \
+-in ldap01.csr \
+-CA ca.crt \
+-CAkey ca.key \
+-CAcreateserial \
+-out ldap01.crt \
+-days 3650 \
+-extfile ldap01.ext
+```
+
+LDAP02:
+```bash
+openssl x509 -req \
+-in ldap02.csr \
+-CA ca.crt \
+-CAkey ca.key \
+-CAcreateserial \
+-out ldap02.crt \
+-days 3650 \
+-extfile ldap02.ext
+```
+
+### Install certificates on each node
+LDAP01:
+```bash
+mkdir -p /etc/ldap/certs
+mv ldap01.crt /etc/ldap/certs/
+mv ldap01.key /etc/ldap/certs/
+mv ca.crt /etc/ldap/certs/
+```
+LDAP02:
+```bash
+mkdir -p /etc/ldap/certs
+mv ldap02.crt /etc/ldap/certs/
+mv ldap02.key /etc/ldap/certs/
+mv ca.crt /etc/ldap/certs/
+```
+Assign permissions and owner on each node
+```bash
+chown openldap:openldap /etc/ldap/certs/*
+chmod 600 /etc/ldap/certs/*.key
+chmod 644 /etc/ldap/certs/*.crt
+```
+### Configure TLS in cn=config LDAP on each node
+Create TLS.ldif on LDAP01:
+```conf
+dn: cn=config
+changetype: modify
+replace: olcTLSCACertificateFile
+olcTLSCACertificateFile: /etc/ldap/certs/ca.crt
+-
+replace: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/ldap/certs/ldap01.crt
+-
+replace: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/ldap/certs/ldap01.key
+```
+
+Create TLS.ldif on LDAP02:
+```conf
+dn: cn=config
+changetype: modify
+replace: olcTLSCACertificateFile
+olcTLSCACertificateFile: /etc/ldap/certs/ca.crt
+-
+replace: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/ldap/certs/ldap02.crt
+-
+replace: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/ldap/certs/ldap02.key
+```
+
+Apply to each node:
+```bash
+sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f TLS.ldif
 ```
 
 ## 13 Install and configure LAM 
