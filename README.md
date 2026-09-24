@@ -686,6 +686,16 @@ Check:
 sudo ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b "olcDatabase={1}mdb,cn=config" olcMirrorMode
 ```
 
+## Activate TLS SALPS
+In a multi-master OpenLDAP environment, it is common practice to enable TLS using self-signed certificates from an internal CA
+
+* Create an internal CA.
+* Generate a certificate for each LDAP node.
+* Configure slapd to use TLS.
+* Restart and verify.
+* Configure replication to use ldaps:// or startTLS.
+* Distribute the CA certificate to all clients and LDAP nodes.
+
 ## 13 Install and configure LAM 
 
 ### 13.1 Download and install Packet
