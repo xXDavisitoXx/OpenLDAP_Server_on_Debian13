@@ -876,6 +876,24 @@ Verify LDAPS por is active
 ss -lntp | grep 636
 ```
 
+Check TLS:
+
+```bash
+openssl s_client \
+-connect ldap01.midominio.local:636 \
+-CAfile ca.crt
+```
+Correct result:
+```conf
+Verify return code: 0 (ok)
+```
+
+### Configure CA trust
+Copy ca.crt to all LDAP nodes and clients
+```bash
+cp ca.crt /usr/local/share/ca-certificates/
+update-ca-certificates
+```
 
 ## 13 Install and configure LAM 
 
