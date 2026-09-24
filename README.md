@@ -850,6 +850,33 @@ Apply to each node:
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f TLS.ldif
 ```
 
+### Activate LDAPS listener on each node
+```bash
+sudo nano /etc/default/slapd
+```
+
+Search 
+```conf
+SLAPD_SERVICES="ldap:/// ldapi:///"
+```
+
+Replace:
+```conf
+SLAPD_SERVICES="ldap:/// ldaps:/// ldapi:///"
+```
+
+Restart slapd service
+Replace:
+```conf
+systemctl restart slapd
+```
+
+Verify LDAPS por is active
+```bash
+ss -lntp | grep 636
+```
+
+
 ## 13 Install and configure LAM 
 
 ### 13.1 Download and install Packet
