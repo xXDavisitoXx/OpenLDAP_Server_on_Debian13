@@ -700,11 +700,8 @@ In a multi-master OpenLDAP environment, it is common practice to enable TLS usin
 
 ```bash
 mkdir /root/ca
-
 cd /root/ca
-
 openssl genrsa -out ca.key 4096
-
 openssl req -new -x509 \
 -days 3650 \
 -key ca.key \
@@ -866,7 +863,6 @@ SLAPD_SERVICES="ldap:/// ldaps:/// ldapi:///"
 ```
 
 Restart slapd service
-Replace:
 ```conf
 systemctl restart slapd
 ```
@@ -892,6 +888,8 @@ Verify return code: 0 (ok)
 Copy ca.crt to all LDAP nodes and clients
 ```bash
 cp ca.crt /usr/local/share/ca-certificates/
+```
+```bash
 update-ca-certificates
 ```
 
