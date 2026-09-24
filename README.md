@@ -738,7 +738,7 @@ openssl req -new \
 -subj "/C=US/O=Computer_Academy/CN=ldap02.computer.academy.com"
 ```
 
-### Creae SAN files
+### Create SAN files
 LDAP01:
 ```bash
 cat > ldap01.ext << EOF
