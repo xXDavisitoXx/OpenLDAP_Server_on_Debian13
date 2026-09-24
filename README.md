@@ -913,7 +913,7 @@ olcSyncrepl: rid=001
   bindmethod=simple
   binddn="uid=LDAP-Reader,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
   credentials=SyncroDAP66$
-  searchbase="dc=correodip,dc=exteriores,dc=gob,dc=es"
+  searchbase="dc=computer,dc=academy,dc=com"
   type=refreshAndPersist
   retry="5 5 300 +"
   timeout=5
@@ -931,7 +931,7 @@ olcSyncrepl: rid=002
   bindmethod=simple
   binddn="uid=LDAP-Reader,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
   credentials=SyncroDAP66$
-  searchbase="dc=correodip,dc=exteriores,dc=gob,dc=es"
+  searchbase="dc=computer,dc=academy,dc=com"
   type=refreshAndPersist
   retry="5 5 300 +"
   timeout=5
