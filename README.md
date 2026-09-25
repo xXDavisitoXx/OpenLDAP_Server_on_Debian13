@@ -22,6 +22,22 @@ ORDER:
 * 5. Create the sudo roles
 * 6. Apply the LAM ACL
 
+## 0 Prepare Server
+Edit the hosts file or configure LDAP records on our DNS servers
+```bash
+sudo nano /etc/hosts
+```
+```conf
+127.0.0.1       localhost
+# 127.0.1.1     Ldap1.computer.academy.com      Ldap1
+192.168.1.32    Lap1.computer.academy.com      Ldap1
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+```
+
 ## 1 install software
 ```bash
 apt update
