@@ -22,7 +22,7 @@ ORDER:
 * 5. Create the sudo roles
 * 6. Apply the LAM ACL
 
-## 0 Prepare Server
+## 0 Prepare LDAP Servers
 Edit the hosts file or configure LDAP records on our DNS servers
 ```bash
 sudo nano /etc/hosts
@@ -731,31 +731,31 @@ openssl req -new -x509 \
 
 LDAP01:
 ```bash
-openssl genrsa -out ldap01.key 4096
+openssl genrsa -out ldap1.key 4096
 ```
 
 ```bash
 openssl req -new \
--key ldap01.key \
--out ldap01.csr \
--subj "/C=US/O=Computer_Academy/CN=ldap01.computer.academy.com"
+-key Ldap1.key \
+-out Ldap1.csr \
+-subj "/C=US/O=Computer_Academy/CN=Ldap1.computer.academy.com"
 ```
 LDAP02:
 ```bash
-openssl genrsa -out ldap02.key 4096
+openssl genrsa -out Ldap2.key 4096
 ```
 
 ```bash
 openssl req -new \
--key ldap02.key \
--out ldap02.csr \
--subj "/C=US/O=Computer_Academy/CN=ldap02.computer.academy.com"
+-key Ldap2.key \
+-out Ldap2.csr \
+-subj "/C=US/O=Computer_Academy/CN=Ldap2.computer.academy.com"
 ```
 
 ### Create SAN files
-LDAP01:
+LDAP1:
 ```bash
-cat > ldap01.ext << EOF
+cat > Ldap1.ext << EOF
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
 keyUsage=digitalSignature,keyEncipherment
@@ -763,14 +763,14 @@ extendedKeyUsage=serverAuth
 subjectAltName=@alt_names
 
 [alt_names]
-DNS.1=ldap1.computer.academy.com
-DNS.2=ldap1
+DNS.1=Ldap1.computer.academy.com
+DNS.2=Ldap1
 EOF
 ```
 
-LDAP02:
+LDAP2:
 ```bash
-cat > ldap02.ext << EOF
+cat > Ldap2.ext << EOF
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
 keyUsage=digitalSignature,keyEncipherment
@@ -778,34 +778,34 @@ extendedKeyUsage=serverAuth
 subjectAltName=@alt_names
 
 [alt_names]
-DNS.1=ldap2.computer.academy.com
-DNS.2=ldap02
+DNS.1=Ldap2.computer.academy.com
+DNS.2=Ldap2
 EOF
 ```
 
 ### Self-sign the certificates each LDAP
-LDAP01:
+LDAP1:
 ```bash
 openssl x509 -req \
--in ldap01.csr \
+-in Ldap1.csr \
 -CA ca.crt \
 -CAkey ca.key \
 -CAcreateserial \
--out ldap01.crt \
+-out Ldap1.crt \
 -days 3650 \
--extfile ldap1.ext
+-extfile Ldap1.ext
 ```
 
-LDAP02:
+LDAP2:
 ```bash
 openssl x509 -req \
--in ldap02.csr \
+-in Ldap2.csr \
 -CA ca.crt \
 -CAkey ca.key \
 -CAcreateserial \
--out ldap02.crt \
+-out Ldap2.crt \
 -days 3650 \
--extfile ldap2.ext
+-extfile Ldap2.ext
 ```
 
 ### Install certificates on each node
@@ -819,8 +819,8 @@ mv ca.crt /etc/ldap/certs/
 LDAP02:
 ```bash
 mkdir -p /etc/ldap/certs
-mv ldap2.crt /etc/ldap/certs/
-mv ldap2.key /etc/ldap/certs/
+mv Ldap2.crt /etc/ldap/certs/
+mv Ldap2.key /etc/ldap/certs/
 mv ca.crt /etc/ldap/certs/
 ```
 Assign permissions and owner on each node
@@ -840,10 +840,10 @@ replace: olcTLSCACertificateFile
 olcTLSCACertificateFile: /etc/ldap/certs/ca.crt
 -
 replace: olcTLSCertificateFile
-olcTLSCertificateFile: /etc/ldap/certs/ldap01.crt
+olcTLSCertificateFile: /etc/ldap/certs/Ldap1.crt
 -
 replace: olcTLSCertificateKeyFile
-olcTLSCertificateKeyFile: /etc/ldap/certs/ldap01.key
+olcTLSCertificateKeyFile: /etc/ldap/certs/Ldap1.key
 ```
 
 Create TLS.ldif on LDAP02:
@@ -854,10 +854,10 @@ replace: olcTLSCACertificateFile
 olcTLSCACertificateFile: /etc/ldap/certs/ca.crt
 -
 replace: olcTLSCertificateFile
-olcTLSCertificateFile: /etc/ldap/certs/ldap02.crt
+olcTLSCertificateFile: /etc/ldap/certs/Ldap2.crt
 -
 replace: olcTLSCertificateKeyFile
-olcTLSCertificateKeyFile: /etc/ldap/certs/ldap02.key
+olcTLSCertificateKeyFile: /etc/ldap/certs/Ldap2.key
 ```
 
 Apply to each node:
@@ -880,19 +880,6 @@ Restart slapd service
 systemctl restart slapd
 ```
 
-
-Check TLS:
-
-```bash
-openssl s_client \
--connect ldap01.midominio.local:636 \
--CAfile ca.crt
-```
-Correct result:
-```conf
-Verify return code: 0 (ok)
-```
-
 ### Configure CA trust
 Copy ca.crt to all LDAP nodes and clients
 ```bash
@@ -913,7 +900,7 @@ dn: olcDatabase={1}mdb,cn=config
 changetype: modify
 replace: olcSyncrepl
 olcSyncrepl: rid=001
-  provider=ldap://LDAP02.computer.academy.com
+  provider=ldap://Ldap2.computer.academy.com:389
   starttls=yes
   bindmethod=simple
   binddn="uid=LDAP-Reader,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
@@ -931,7 +918,7 @@ dn: olcDatabase={1}mdb,cn=config
 changetype: modify
 replace: olcSyncrepl
 olcSyncrepl: rid=002
-  provider=ldap://LDAP01.computer.academy.com
+  provider=ldap://Ldap1.computer.academy.com:389
   starttls=yes
   bindmethod=simple
   binddn="uid=LDAP-Reader,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
@@ -942,13 +929,7 @@ olcSyncrepl: rid=002
   timeout=5
   tls_reqcert=demand
 ```
-```conf
-ldapsearch -ZZ \
--H ldap://ldap02.midominio.local \
--D "cn=replicator,dc=midominio,dc=local" \
--W \
--b dc=midominio,dc=local
-```
+
 If the certificate is invalid or the CA is not installed, you will encounter errors such as:
 
 ```bash
