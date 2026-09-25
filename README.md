@@ -623,7 +623,7 @@ dn: olcDatabase={1}mdb,cn=config
 changetype: modify
 add: olcSyncrepl
 olcSyncrepl: rid=001
-  provider=ldap://IP-LDAP-2
+  provider=ldap://ldap2.computer.academy.com
   bindmethod=simple
   binddn="uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
   credentials="LDAP-Syncer-PASS"
@@ -641,7 +641,7 @@ dn: olcDatabase={1}mdb,cn=config
 changetype: modify
 add: olcSyncrepl
 olcSyncrepl: rid=002
-  provider=ldap://IP-LDAP-1
+  provider=ldap://ldap1.computer.academy.com
   bindmethod=simple
   binddn="uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
   credentials="LDAP-Syncer-PASS"
