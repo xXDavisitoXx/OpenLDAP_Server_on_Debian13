@@ -30,7 +30,7 @@ sudo nano /etc/hosts
 ```conf
 127.0.0.1       localhost
 # 127.0.1.1     Ldap1.computer.academy.com      Ldap1
-192.168.1.32    Lap1.computer.academy.com      Ldap1
+192.168.1.32    Ldap1.computer.academy.com      Ldap1
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     localhost ip6-localhost ip6-loopback
@@ -639,10 +639,10 @@ dn: olcDatabase={1}mdb,cn=config
 changetype: modify
 add: olcSyncrepl
 olcSyncrepl: rid=001
-  provider=ldap://ldap2.computer.academy.com
+  provider=ldap://Ldap2.computer.academy.com:389
   bindmethod=simple
   binddn="uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
-  credentials="LDAP-Syncer-PASS"
+  credentials="LDAP-Reader-PASS"
   searchbase="dc=computer,dc=academy,dc=com"
   type=refreshAndPersist
   retry="5 5 300 +"
@@ -657,10 +657,10 @@ dn: olcDatabase={1}mdb,cn=config
 changetype: modify
 add: olcSyncrepl
 olcSyncrepl: rid=002
-  provider=ldap://ldap1.computer.academy.com
+  provider=ldap://Ldap1.computer.academy.com:389
   bindmethod=simple
   binddn="uid=LDAP-Syncer,ou=Services,ou=Users,dc=computer,dc=academy,dc=com"
-  credentials="LDAP-Syncer-PASS"
+  credentials="LDAP-Raader-PASS"
   searchbase="dc=computer,dc=academy,dc=com"
   type=refreshAndPersist
   retry="5 5 300 +"
@@ -719,19 +719,21 @@ mkdir /root/ca
 cd /root/ca
 ```
 ```bash
-openssl genrsa -out ca.key 4096
+openssl genrsa -out CA.key 4096
+```
+```bash
 openssl req -new -x509 \
 -days 3650 \
--key ca.key \
--out ca.crt \
+-key CA.key \
+-out CA.crt \
 -subj "/C=US/O=Computer_Academy/CN=Computer_Academy_LDAP_CA"
 ```
 
 ### Generate a certificate for each LDAP node
 
-LDAP01:
+LDAP1:
 ```bash
-openssl genrsa -out ldap1.key 4096
+openssl genrsa -out Ldap1.key 4096
 ```
 
 ```bash
@@ -740,7 +742,7 @@ openssl req -new \
 -out Ldap1.csr \
 -subj "/C=US/O=Computer_Academy/CN=Ldap1.computer.academy.com"
 ```
-LDAP02:
+LDAP2:
 ```bash
 openssl genrsa -out Ldap2.key 4096
 ```
@@ -788,8 +790,8 @@ LDAP1:
 ```bash
 openssl x509 -req \
 -in Ldap1.csr \
--CA ca.crt \
--CAkey ca.key \
+-CA CA.crt \
+-CAkey CA.key \
 -CAcreateserial \
 -out Ldap1.crt \
 -days 3650 \
@@ -800,8 +802,8 @@ LDAP2:
 ```bash
 openssl x509 -req \
 -in Ldap2.csr \
--CA ca.crt \
--CAkey ca.key \
+-CA CA.crt \
+-CAkey CA.key \
 -CAcreateserial \
 -out Ldap2.crt \
 -days 3650 \
@@ -812,16 +814,16 @@ openssl x509 -req \
 LDAP01:
 ```bash
 mkdir -p /etc/ldap/certs
-mv ldap1.crt /etc/ldap/certs/
-mv ldap1.key /etc/ldap/certs/
-mv ca.crt /etc/ldap/certs/
+mv Ldap1.crt /etc/ldap/certs/
+mv Ldap1.key /etc/ldap/certs/
+mv CA.crt /etc/ldap/certs/
 ```
 LDAP02:
 ```bash
 mkdir -p /etc/ldap/certs
 mv Ldap2.crt /etc/ldap/certs/
 mv Ldap2.key /etc/ldap/certs/
-mv ca.crt /etc/ldap/certs/
+mv CA.crt /etc/ldap/certs/
 ```
 Assign permissions and owner on each node
 ```bash
@@ -837,7 +839,7 @@ Create TLS.ldif on LDAP01:
 dn: cn=config
 changetype: modify
 replace: olcTLSCACertificateFile
-olcTLSCACertificateFile: /etc/ldap/certs/ca.crt
+olcTLSCACertificateFile: /etc/ldap/certs/CA.crt
 -
 replace: olcTLSCertificateFile
 olcTLSCertificateFile: /etc/ldap/certs/Ldap1.crt
@@ -851,7 +853,7 @@ Create TLS.ldif on LDAP02:
 dn: cn=config
 changetype: modify
 replace: olcTLSCACertificateFile
-olcTLSCACertificateFile: /etc/ldap/certs/ca.crt
+olcTLSCACertificateFile: /etc/ldap/certs/CA.crt
 -
 replace: olcTLSCertificateFile
 olcTLSCertificateFile: /etc/ldap/certs/Ldap2.crt
@@ -871,7 +873,7 @@ sudo nano /etc/ldap/ldap.conf
 ```
 
 ```conf
-TLS_CACERT /etc/ldap/certs/ca.crt
+TLS_CACERT /etc/ldap/certs/CA.crt
 TLS_REQCERT demand
 ```
 
