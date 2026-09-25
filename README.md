@@ -747,9 +747,8 @@ extendedKeyUsage=serverAuth
 subjectAltName=@alt_names
 
 [alt_names]
-DNS.1=ldap01.computer.academy.com
-DNS.2=ldap01
-IP.1=YOUR-STATIC-IP
+DNS.1=ldap1.computer.academy.com
+DNS.2=ldap1
 EOF
 ```
 
@@ -763,9 +762,8 @@ extendedKeyUsage=serverAuth
 subjectAltName=@alt_names
 
 [alt_names]
-DNS.1=ldap02.computer.academy.com
+DNS.1=ldap2.computer.academy.com
 DNS.2=ldap02
-IP.1=YOUR-STATIC-IP
 EOF
 ```
 
@@ -779,7 +777,7 @@ openssl x509 -req \
 -CAcreateserial \
 -out ldap01.crt \
 -days 3650 \
--extfile ldap01.ext
+-extfile ldap1.ext
 ```
 
 LDAP02:
@@ -791,22 +789,22 @@ openssl x509 -req \
 -CAcreateserial \
 -out ldap02.crt \
 -days 3650 \
--extfile ldap02.ext
+-extfile ldap2.ext
 ```
 
 ### Install certificates on each node
 LDAP01:
 ```bash
 mkdir -p /etc/ldap/certs
-mv ldap01.crt /etc/ldap/certs/
-mv ldap01.key /etc/ldap/certs/
+mv ldap1.crt /etc/ldap/certs/
+mv ldap1.key /etc/ldap/certs/
 mv ca.crt /etc/ldap/certs/
 ```
 LDAP02:
 ```bash
 mkdir -p /etc/ldap/certs
-mv ldap02.crt /etc/ldap/certs/
-mv ldap02.key /etc/ldap/certs/
+mv ldap2.crt /etc/ldap/certs/
+mv ldap2.key /etc/ldap/certs/
 mv ca.crt /etc/ldap/certs/
 ```
 Assign permissions and owner on each node
